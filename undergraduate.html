@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UMBC Information Systems</title>
+  <meta name="description" content="UMBC Information Systems Department prototype" />
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/37/UMBC_primary_mark.svg" />
+  <style>
+    :root {
+      --umbc-gold: #ffcc00;
+      --umbc-black: #111111;
+      --umbc-gray: #f5f5f7;
+      --ink: #1f2937;
+      --ink-2: #374151;
+      --link: #0b72b9;
+      --focus: #2563eb;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: var(--ink); background: white; }
+    a { color: var(--link); text-decoration: none; }
+    a:focus, button:focus, input:focus, textarea:focus, select:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 18px; }
+    header.site-header { position: sticky; top:0; z-index:100; background: white; border-bottom: 1px solid #eee; }
+    .topbar { background: var(--umbc-black); color: white; font-size: 14px; }
+    .topbar .container { display:flex; align-items:center; justify-content:space-between; padding:8px 18px; }
+    .brand { display:flex; align-items:center; gap:12px; padding:14px 0; }
+    .brand img { width: 38px; height: 38px; }
+    .brand .title { font-weight: 800; letter-spacing:.2px; }
+    nav.primary { display:flex; align-items:center; gap: 16px; flex-wrap: wrap;}
+    nav.primary a { padding:10px 12px; border-radius: 10px; color: var(--ink-2); font-weight: 600; }
+    nav.primary a[aria-current="page"], nav.primary a:hover { background: var(--umbc-gray); }
+    .skip { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip:focus { position:static; width:auto; height:auto; padding:8px 12px; background: var(--umbc-gold); color: #000; }
+    .hero { background: linear-gradient(180deg, #fff 0%, #fafafa 100%); border-bottom:1px solid #eee; }
+    .hero .wrap { display:grid; grid-template-columns:1.2fr 1fr; gap:30px; padding: 40px 0; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; background: #fff6cc; border:1px solid #ffe480; font-weight:700; color:#6b4e00; }
+    .cta { display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;}
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius: 12px; border:1px solid #e5e7eb; background:white; box-shadow: var(--shadow); font-weight:700; }
+    .btn.primary { background: var(--umbc-gold); border-color: #f2c200; color:#1b1400; }
+    .cards { display:grid; grid-template-columns: repeat(12, 1fr); gap:16px; margin: 28px 0 40px; }
+    .card { grid-column: span 4; background:white; border:1px solid #eee; border-radius: var(--radius); padding:18px; box-shadow: var(--shadow); }
+    @media (max-width: 920px) { .hero .wrap { grid-template-columns:1fr; } .card { grid-column: span 12; } }
+    .section { padding: 28px 0; }
+    .muted { color:#666; }
+    .kpi { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; }
+    .kpi .item { text-align:center; background:#fafafa; border:1px solid #eee; border-radius:12px; padding:18px; }
+    footer.site-footer { background: var(--umbc-black); color: #ddd; margin-top: 36px; }
+    footer .cols { display:grid; grid-template-columns: 2fr 1fr 1fr; gap:24px; padding: 28px 0; }
+    footer a { color: #fff; }
+    @media (max-width: 800px) { footer .cols { grid-template-columns: 1fr; } }
+    /* Page-specific bits */
+    .breadcrumbs { font-size: 14px; margin: 8px 0 -8px; color:#6b7280; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    @media (max-width: 900px){ .grid-2 { grid-template-columns:1fr; } }
+    .list { list-style: none; padding:0; margin:0; }
+    .list li { padding:10px 12px; border:1px solid #eee; border-radius:12px; margin-bottom:10px; background:#fff; }
+    .badge { background:#eef2ff; color:#3730a3; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:700; }
+    form .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    form label { display:block; font-weight:700; margin:10px 0 6px; }
+    form input, form textarea, form select { width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; }
+    form button { margin-top:12px; }
+    .map-placeholder { background: repeating-linear-gradient(45deg, #f3f4f6, #f3f4f6 10px, #e5e7eb 10px, #e5e7eb 20px); border:1px dashed #9ca3af; border-radius: 12px; height: 260px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-weight:700;}
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site-header" role="banner">
+  <div class="topbar" aria-label="utility">
+    <div class="container">
+      <div>University of Maryland, Baltimore County</div>
+      <div><a href="#" style="color:white;">myUMBC</a> · <a href="#" style="color:white;">Apply</a> · <a href="#" style="color:white;">Visit</a></div>
+    </div>
+  </div>
+  <div class="container" role="navigation" aria-label="Primary">
+    <div class="brand">
+      <img alt="UMBC logo" src="https://upload.wikimedia.org/wikipedia/commons/3/37/UMBC_primary_mark.svg" />
+      <div>
+        <div class="title">Information Systems (IS)</div>
+        <div class="muted" style="font-size:14px;">College of Engineering &amp; Information Technology</div>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="index.html" id="nav-home">Home</a>
+      <a href="undergraduate.html" id="nav-undergrad">Undergraduate Program</a>
+      <a href="contact.html" id="nav-contact">Contact Us</a>
+    </nav>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+
+<div class="container">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="index.html">Home</a> › Undergraduate Program (B.S. in IS)
+  </nav>
+</div>
+
+<section class="section container" aria-labelledby="overview">
+  <h1 id="overview">B.S. in Information Systems</h1>
+  <p class="muted">A human-centered computing degree that prepares you to build reliable, usable, and ethical systems.</p>
+  <div class="cards">
+    <div class="card" style="grid-column: span 6;">
+      <h3>Program Snapshot</h3>
+      <ul class="list">
+        <li>Core: Programming, Data Structures, Databases, Networks, Systems Analysis</li>
+        <li>Practice: Project Management, UX, Business Process &amp; Analytics</li>
+        <li>Capstone: Team-based real-world project</li>
+      </ul>
+    </div>
+    <div class="card" style="grid-column: span 6;">
+      <h3>Learning Outcomes</h3>
+      <ul class="list">
+        <li>Design &amp; evaluate information systems that meet stakeholder needs</li>
+        <li>Apply data and process modeling to solve organizational problems</li>
+        <li>Communicate effectively across technical and non-technical audiences</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section container grid-2" aria-labelledby="curriculum">
+  <div>
+    <h2 id="curriculum">Sample 4-Year Plan</h2>
+    <ul class="list">
+      <li><strong>Year 1:</strong> Intro to IS, Programming I, Calculus/Stats, GEPs</li>
+      <li><strong>Year 2:</strong> Programming II, Data Structures, Business Processes</li>
+      <li><strong>Year 3:</strong> Databases, Networks, UX, Analytics Elective</li>
+      <li><strong>Year 4:</strong> Systems Analysis &amp; Design, Capstone, Advanced Electives</li>
+    </ul>
+  </div>
+  <div>
+    <h2>High-Value Electives</h2>
+    <ul class="list">
+      <li>Mobile &amp; Cloud Development</li>
+      <li>Human-Computer Interaction</li>
+      <li>Cybersecurity Foundations</li>
+      <li>Data Visualization &amp; Mining</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section container grid-2" aria-labelledby="admissions">
+  <div>
+    <h2 id="admissions">Admissions &amp; Advising</h2>
+    <ol class="list">
+      <li>Apply to UMBC (select IS as your intended major)</li>
+      <li>Complete math placement and orientation</li>
+      <li>Meet with an IS advisor to build your plan</li>
+    </ol>
+    <p><a class="btn primary" href="contact.html">Contact Advising</a></p>
+  </div>
+  <div>
+    <h2>Student Support</h2>
+    <ul class="list">
+      <li>Tutoring &amp; Peer Mentoring</li>
+      <li>Career Center Partnerships</li>
+      <li>IS Student Organizations &amp; Events</li>
+    </ul>
+  </div>
+</section>
+<script>
+  document.getElementById('nav-undergrad').setAttribute('aria-current','page');
+</script>
+
+</main>
+<footer class="site-footer" role="contentinfo">
+  <div class="container cols">
+    <div>
+      <h3 style="margin-top:0;">UMBC Information Systems</h3>
+      <p class="muted">1000 Hilltop Circle, Baltimore, MD 21250</p>
+      <p class="muted">© 2025 University of Maryland, Baltimore County</p>
+    </div>
+    <div>
+      <strong>Quick Links</strong>
+      <ul class="list" style="margin-top:8px;">
+        <li><a href="https://w3schools.com/html/" target="_blank" rel="noopener">HTML Tutorials</a></li>
+        <li><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></li>
+        <li><a href="https://excalidraw.com/" target="_blank" rel="noopener">Excalidraw Wireframes</a></li>
+      </ul>
+    </div>
+    <div>
+      <strong>Connect</strong>
+      <ul class="list" style="margin-top:8px;">
+        <li><a href="#">Visit UMBC</a></li>
+        <li><a href="#">Request Info</a></li>
+        <li><a href="#">Support UMBC</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

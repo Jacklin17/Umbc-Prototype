@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UMBC Information Systems</title>
+  <meta name="description" content="UMBC Information Systems Department prototype" />
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/3/37/UMBC_primary_mark.svg" />
+  <style>
+    :root {
+      --umbc-gold: #ffcc00;
+      --umbc-black: #111111;
+      --umbc-gray: #f5f5f7;
+      --ink: #1f2937;
+      --ink-2: #374151;
+      --link: #0b72b9;
+      --focus: #2563eb;
+      --radius: 14px;
+      --shadow: 0 6px 18px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; color: var(--ink); background: white; }
+    a { color: var(--link); text-decoration: none; }
+    a:focus, button:focus, input:focus, textarea:focus, select:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 18px; }
+    header.site-header { position: sticky; top:0; z-index:100; background: white; border-bottom: 1px solid #eee; }
+    .topbar { background: var(--umbc-black); color: white; font-size: 14px; }
+    .topbar .container { display:flex; align-items:center; justify-content:space-between; padding:8px 18px; }
+    .brand { display:flex; align-items:center; gap:12px; padding:14px 0; }
+    .brand img { width: 38px; height: 38px; }
+    .brand .title { font-weight: 800; letter-spacing:.2px; }
+    nav.primary { display:flex; align-items:center; gap: 16px; flex-wrap: wrap;}
+    nav.primary a { padding:10px 12px; border-radius: 10px; color: var(--ink-2); font-weight: 600; }
+    nav.primary a[aria-current="page"], nav.primary a:hover { background: var(--umbc-gray); }
+    .skip { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip:focus { position:static; width:auto; height:auto; padding:8px 12px; background: var(--umbc-gold); color: #000; }
+    .hero { background: linear-gradient(180deg, #fff 0%, #fafafa 100%); border-bottom:1px solid #eee; }
+    .hero .wrap { display:grid; grid-template-columns:1.2fr 1fr; gap:30px; padding: 40px 0; }
+    .pill { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; background: #fff6cc; border:1px solid #ffe480; font-weight:700; color:#6b4e00; }
+    .cta { display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;}
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius: 12px; border:1px solid #e5e7eb; background:white; box-shadow: var(--shadow); font-weight:700; }
+    .btn.primary { background: var(--umbc-gold); border-color: #f2c200; color:#1b1400; }
+    .cards { display:grid; grid-template-columns: repeat(12, 1fr); gap:16px; margin: 28px 0 40px; }
+    .card { grid-column: span 4; background:white; border:1px solid #eee; border-radius: var(--radius); padding:18px; box-shadow: var(--shadow); }
+    @media (max-width: 920px) { .hero .wrap { grid-template-columns:1fr; } .card { grid-column: span 12; } }
+    .section { padding: 28px 0; }
+    .muted { color:#666; }
+    .kpi { display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; }
+    .kpi .item { text-align:center; background:#fafafa; border:1px solid #eee; border-radius:12px; padding:18px; }
+    footer.site-footer { background: var(--umbc-black); color: #ddd; margin-top: 36px; }
+    footer .cols { display:grid; grid-template-columns: 2fr 1fr 1fr; gap:24px; padding: 28px 0; }
+    footer a { color: #fff; }
+    @media (max-width: 800px) { footer .cols { grid-template-columns: 1fr; } }
+    /* Page-specific bits */
+    .breadcrumbs { font-size: 14px; margin: 8px 0 -8px; color:#6b7280; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    @media (max-width: 900px){ .grid-2 { grid-template-columns:1fr; } }
+    .list { list-style: none; padding:0; margin:0; }
+    .list li { padding:10px 12px; border:1px solid #eee; border-radius:12px; margin-bottom:10px; background:#fff; }
+    .badge { background:#eef2ff; color:#3730a3; padding:4px 8px; border-radius:10px; font-size:12px; font-weight:700; }
+    form .row { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    form label { display:block; font-weight:700; margin:10px 0 6px; }
+    form input, form textarea, form select { width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; }
+    form button { margin-top:12px; }
+    .map-placeholder { background: repeating-linear-gradient(45deg, #f3f4f6, #f3f4f6 10px, #e5e7eb 10px, #e5e7eb 20px); border:1px dashed #9ca3af; border-radius: 12px; height: 260px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-weight:700;}
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site-header" role="banner">
+  <div class="topbar" aria-label="utility">
+    <div class="container">
+      <div>University of Maryland, Baltimore County</div>
+      <div><a href="#" style="color:white;">myUMBC</a> · <a href="#" style="color:white;">Apply</a> · <a href="#" style="color:white;">Visit</a></div>
+    </div>
+  </div>
+  <div class="container" role="navigation" aria-label="Primary">
+    <div class="brand">
+      <img alt="UMBC logo" src="https://upload.wikimedia.org/wikipedia/commons/3/37/UMBC_primary_mark.svg" />
+      <div>
+        <div class="title">Information Systems (IS)</div>
+        <div class="muted" style="font-size:14px;">College of Engineering &amp; Information Technology</div>
+      </div>
+    </div>
+    <nav class="primary">
+      <a href="index.html" id="nav-home">Home</a>
+      <a href="undergraduate.html" id="nav-undergrad">Undergraduate Program</a>
+      <a href="contact.html" id="nav-contact">Contact Us</a>
+    </nav>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+
+<section class="hero" aria-labelledby="home-hero">
+  <div class="container wrap">
+    <div>
+      <span class="pill" aria-label="Department tagline">Innovate · Analyze · Build</span>
+      <h1 id="home-hero" style="font-size: clamp(28px, 4vw, 42px); margin: 10px 0 8px;">Design the future of information.</h1>
+      <p class="muted" style="font-size:18px; line-height:1.6;">
+        UMBC's Information Systems program blends computing, data, and people to solve complex problems.
+        Explore our undergraduate pathways, connect with advisors, and see how our students lead with technology.
+      </p>
+      <div class="cta" role="group" aria-label="Primary actions">
+        <a class="btn primary" href="undergraduate.html">Explore the IS B.S.</a>
+        <a class="btn" href="contact.html">Talk to an Advisor</a>
+      </div>
+    </div>
+    <div aria-hidden="true" style="align-self:center;">
+      <div class="kpi">
+        <div class="item"><div style="font-size:32px; font-weight:900;">#1</div><div class="muted">Student Support</div></div>
+        <div class="item"><div style="font-size:32px; font-weight:900;">30+</div><div class="muted">Faculty &amp; Lecturers</div></div>
+        <div class="item"><div style="font-size:32px; font-weight:900;">4</div><div class="muted">Research Centers</div></div>
+        <div class="item"><div style="font-size:32px; font-weight:900;">95%</div><div class="muted">Career Placement</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section container" aria-labelledby="updates">
+  <h2 id="updates">News &amp; Updates</h2>
+  <div class="cards" role="list">
+    <article class="card" role="listitem" aria-labelledby="n1">
+      <div class="badge">Announcement</div>
+      <h3 id="n1">Spring Advising Now Open</h3>
+      <p>Meet with an IS advisor to plan your courses and explore internships.</p>
+      <p><a href="contact.html" class="btn">Schedule</a></p>
+    </article>
+    <article class="card" role="listitem" aria-labelledby="n2">
+      <div class="badge">Event</div>
+      <h3 id="n2">Analytics Night @ UMBC</h3>
+      <p>Join alumni and partners to explore careers in data and UX.</p>
+      <p><a href="#" class="btn">Register</a></p>
+    </article>
+    <article class="card" role="listitem" aria-labelledby="n3">
+      <div class="badge">Spotlight</div>
+      <h3 id="n3">Student Project Showcase</h3>
+      <p>See capstone apps, dashboards, and research posters from IS seniors.</p>
+      <p><a href="#" class="btn">View Gallery</a></p>
+    </article>
+  </div>
+</section>
+
+<section class="section container grid-2" aria-labelledby="why">
+  <div>
+    <h2 id="why">Why study IS at UMBC?</h2>
+    <ul class="list">
+      <li><strong>Balanced curriculum:</strong> programming, databases, networks, analytics, UX, and project management.</li>
+      <li><strong>Experiential learning:</strong> internships, co-ops, and community-engaged projects.</li>
+      <li><strong>Inclusive community:</strong> student orgs and mentorship that support your journey.</li>
+    </ul>
+  </div>
+  <div>
+    <h2>Get Started</h2>
+    <ol class="list">
+      <li>Read the <a href="undergraduate.html">IS B.S. overview</a></li>
+      <li>Map your first-year plan</li>
+      <li><a href="contact.html">Contact advising</a> for a personalized plan</li>
+    </ol>
+  </div>
+</section>
+<script>
+  // Set active nav
+  document.getElementById('nav-home').setAttribute('aria-current','page');
+</script>
+
+</main>
+<footer class="site-footer" role="contentinfo">
+  <div class="container cols">
+    <div>
+      <h3 style="margin-top:0;">UMBC Information Systems</h3>
+      <p class="muted">1000 Hilltop Circle, Baltimore, MD 21250</p>
+      <p class="muted">© 2025 University of Maryland, Baltimore County</p>
+    </div>
+    <div>
+      <strong>Quick Links</strong>
+      <ul class="list" style="margin-top:8px;">
+        <li><a href="https://w3schools.com/html/" target="_blank" rel="noopener">HTML Tutorials</a></li>
+        <li><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></li>
+        <li><a href="https://excalidraw.com/" target="_blank" rel="noopener">Excalidraw Wireframes</a></li>
+      </ul>
+    </div>
+    <div>
+      <strong>Connect</strong>
+      <ul class="list" style="margin-top:8px;">
+        <li><a href="#">Visit UMBC</a></li>
+        <li><a href="#">Request Info</a></li>
+        <li><a href="#">Support UMBC</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
